@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.promotions.models import KeywordPromotion, PagePromotion
 from oscar.core.application import Application
@@ -13,10 +14,10 @@ class PromotionsApplication(Application):
 
     def get_urls(self):
         urls = [
-            url(r'page-redirect/(?P<page_promotion_id>\d+)/$',
+            url(_(r'page-redirect/(?P<page_promotion_id>\d+)/$'),
                 self.record_click_view.as_view(model=PagePromotion),
                 name='page-click'),
-            url(r'keyword-redirect/(?P<keyword_promotion_id>\d+)/$',
+            url(_(r'keyword-redirect/(?P<keyword_promotion_id>\d+)/$'),
                 self.record_click_view.as_view(model=KeywordPromotion),
                 name='keyword-click'),
             url(r'^$', self.home_view.as_view(), name='home'),

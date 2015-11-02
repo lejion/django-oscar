@@ -1,4 +1,5 @@
 from django.conf.urls import include, url
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.reviews.app import application as reviews_app
 from oscar.core.application import Application
@@ -18,12 +19,12 @@ class BaseCatalogueApplication(Application):
             url(r'^$', self.catalogue_view.as_view(), name='index'),
             url(r'^(?P<product_slug>[\w-]*)_(?P<pk>\d+)/$',
                 self.detail_view.as_view(), name='detail'),
-            url(r'^category/(?P<category_slug>[\w-]+(/[\w-]+)*)_(?P<pk>\d+)/$',
+            url(_(r'^category/(?P<category_slug>[\w-]+(/[\w-]+)*)_(?P<pk>\d+)/$'),
                 self.category_view.as_view(), name='category'),
             # Fallback URL if a user chops of the last part of the URL
-            url(r'^category/(?P<category_slug>[\w-]+(/[\w-]+)*)/$',
+            url(_(r'^category/(?P<category_slug>[\w-]+(/[\w-]+)*)/$'),
                 self.category_view.as_view()),
-            url(r'^ranges/(?P<slug>[\w-]+)/$',
+            url(_(r'^ranges/(?P<slug>[\w-]+)/$'),
                 self.range_view.as_view(), name='range')]
         return self.post_process_urls(urlpatterns)
 
@@ -35,7 +36,7 @@ class ReviewsApplication(Application):
     def get_urls(self):
         urlpatterns = super(ReviewsApplication, self).get_urls()
         urlpatterns += [
-            url(r'^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/',
+            url(_(r'^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/'),
                 include(self.reviews_app.urls)),
         ]
         return self.post_process_urls(urlpatterns)
