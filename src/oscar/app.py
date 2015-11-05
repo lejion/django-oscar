@@ -32,7 +32,7 @@ class Shop(Application):
             url(_(r'^checkout/'), include(self.checkout_app.urls)),
             url(_(r'^accounts/'), include(self.customer_app.urls)),
             url(_(r'^search/'), include(self.search_app.urls)),
-            url(_(r'^dashboard/'), include(self.dashboard_app.urls)),
+            url(r'^dashboard/', include(self.dashboard_app.urls)),
             url(_(r'^offers/'), include(self.offer_app.urls)),
 
             # Password reset - as we're using Django's default view functions,
