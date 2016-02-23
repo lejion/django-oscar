@@ -1,8 +1,12 @@
 from django.conf import settings
 from django.contrib.contenttypes import fields
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.managers import CurrentSiteManager
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
@@ -47,6 +51,8 @@ class PagePromotion(LinkedPromotion):
     """
     page_url = ExtendedURLField(
         _('Page URL'), max_length=128, db_index=True, verify_exists=True)
+    sites = models.ManyToManyField('sites.Site')
+    objects = CurrentSiteManager()
 
     def __str__(self):
         return u"%s on %s" % (self.content_object, self.page_url)
@@ -58,6 +64,11 @@ class PagePromotion(LinkedPromotion):
     class Meta(LinkedPromotion.Meta):
         verbose_name = _("Page Promotion")
         verbose_name_plural = _("Page Promotions")
+
+
+@receiver(post_save, sender=PagePromotion)
+def add_current_site(sender, instance, **kwargs):
+    instance.sites.add(Site.objects.get_current())
 
 
 class KeywordPromotion(LinkedPromotion):
